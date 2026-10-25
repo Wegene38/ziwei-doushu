@@ -1,5 +1,9 @@
 # 紫微斗数排盘
 
+[![Deploy to GitHub Pages](https://github.com/Wegene38/ziwei-doushu/actions/workflows/deploy.yml/badge.svg)](https://github.com/Wegene38/ziwei-doushu/actions/workflows/deploy.yml)
+
+**在线使用**:https://wegene38.github.io/ziwei-doushu/
+
 基于 GitHub 开源排盘引擎 [iztro](https://github.com/SylarLong/iztro) 开发的紫微斗数 Web 应用,使用 React + TypeScript + Vite 构建。
 
 ## 功能
@@ -57,9 +61,6 @@ src/
 - 排盘口径以 iztro 为准(闰月默认按"前半月归上月、后半月归下月"修正,可在源码 `castChart` 中调整)。
 - 释义文本仅为学习参考的简释,不构成任何人生建议。
 
-## 发布到 GitHub Pages(可选)
+## 自动部署
 
-```bash
-npm run build
-# 将 dist/ 推送到 gh-pages 分支,或使用 gh-pages / actions 部署
-```
+推送到 `main` 分支时,GitHub Actions 会自动构建并发布到 GitHub Pages(见 `.github/workflows/deploy.yml`),无需手动操作。CI 构建时 Vite 的 `base` 自动设为 `/ziwei-doushu/`,本地开发不受影响。
