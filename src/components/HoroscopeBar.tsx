@@ -15,6 +15,7 @@ interface Props {
   onDateChange: (d: string) => void
   marks: Marks | null
   palaceName: (index: number) => string
+  onOpenReading?: () => void
 }
 
 function MutagenLine({ label, mutagen }: { label: string; mutagen: string[] }) {
@@ -33,12 +34,17 @@ function MutagenLine({ label, mutagen }: { label: string; mutagen: string[] }) {
 }
 
 /** 运限(流年/流月/流日)查询条 */
-export default function HoroscopeBar({ date, onDateChange, marks, palaceName }: Props) {
+export default function HoroscopeBar({ date, onDateChange, marks, palaceName, onOpenReading }: Props) {
   return (
     <div className="horoscope-bar">
       <label className="hs-date">
         <span>运限查询</span>
         <input type="date" value={date} onChange={(e) => onDateChange(e.target.value)} />
+        {onOpenReading && (
+          <button className="reading-btn" onClick={onOpenReading}>
+            ☯ 命盘解读
+          </button>
+        )}
       </label>
       {marks && (
         <div className="hs-summary">

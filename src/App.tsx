@@ -2,11 +2,13 @@ import { useEffect, useMemo, useState } from 'react'
 import type { IFunctionalAstrolabe } from 'iztro/lib/astro/FunctionalAstrolabe'
 import type { Profile } from './types'
 import { castChart, horoscopeMarks } from './utils/chart'
+import { readChart } from './utils/reading'
 import { PALACE_NOTES } from './data/interpretations'
 import BirthForm from './components/BirthForm'
 import ChartGrid from './components/ChartGrid'
 import HoroscopeBar from './components/HoroscopeBar'
 import ProfileBar from './components/ProfileBar'
+import ReadingPanel from './components/ReadingPanel'
 
 const STORAGE_KEY = 'ziwei-profiles-v1'
 
@@ -34,6 +36,7 @@ export default function App() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [note, setNote] = useState<{ title: string; text: string } | null>(null)
   const [profiles, setProfiles] = useState<Profile[]>(loadProfiles)
+  const [showReading, setShowReading] = useState(false)
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(profiles))
@@ -59,6 +62,8 @@ export default function App() {
       return null
     }
   }, [astrolabe, horoDate])
+
+  const reading = useMemo(() => (astrolabe ? readChart(astrolabe) : null), [astrolabe])
 
   const palaceName = (index: number) => astrolabe?.palaces[index]?.name ?? `${index}`
 
@@ -100,6 +105,7 @@ export default function App() {
             onDateChange={setHoroDate}
             marks={marks}
             palaceName={palaceName}
+            onOpenReading={() => setShowReading(true)}
           />
           {astroError && <p className="astro-error">{astroError}</p>}
           <ChartGrid
@@ -163,6 +169,10 @@ export default function App() {
           <h4>{note.title}</h4>
           <p>{note.text}</p>
         </aside>
+      )}
+
+      {showReading && reading && (
+        <ReadingPanel reading={reading} onClose={() => setShowReading(false)} />
       )}
     </div>
   )
