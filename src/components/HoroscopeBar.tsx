@@ -16,6 +16,7 @@ interface Props {
   marks: Marks | null
   palaceName: (index: number) => string
   onOpenReading?: () => void
+  onOpenCareer?: () => void
 }
 
 function MutagenLine({ label, mutagen }: { label: string; mutagen: string[] }) {
@@ -34,7 +35,7 @@ function MutagenLine({ label, mutagen }: { label: string; mutagen: string[] }) {
 }
 
 /** 运限(流年/流月/流日)查询条 */
-export default function HoroscopeBar({ date, onDateChange, marks, palaceName, onOpenReading }: Props) {
+export default function HoroscopeBar({ date, onDateChange, marks, palaceName, onOpenReading, onOpenCareer }: Props) {
   return (
     <div className="horoscope-bar">
       <label className="hs-date">
@@ -43,6 +44,11 @@ export default function HoroscopeBar({ date, onDateChange, marks, palaceName, on
         {onOpenReading && (
           <button className="reading-btn" onClick={onOpenReading}>
             ☯ 命盘解读
+          </button>
+        )}
+        {onOpenCareer && (
+          <button className="career-btn" onClick={onOpenCareer}>
+            职业参考
           </button>
         )}
       </label>

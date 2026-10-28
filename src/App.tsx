@@ -3,12 +3,15 @@ import type { IFunctionalAstrolabe } from 'iztro/lib/astro/FunctionalAstrolabe'
 import type { Profile } from './types'
 import { castChart, horoscopeMarks } from './utils/chart'
 import { readChart } from './utils/reading'
+import { computeBazi } from './utils/bazi'
+import { buildCareerReading } from './data/baziCareer'
 import { PALACE_NOTES } from './data/interpretations'
 import BirthForm from './components/BirthForm'
 import ChartGrid from './components/ChartGrid'
 import HoroscopeBar from './components/HoroscopeBar'
 import ProfileBar from './components/ProfileBar'
 import ReadingPanel from './components/ReadingPanel'
+import CareerPanel from './components/CareerPanel'
 
 const STORAGE_KEY = 'ziwei-profiles-v1'
 
@@ -37,6 +40,7 @@ export default function App() {
   const [note, setNote] = useState<{ title: string; text: string } | null>(null)
   const [profiles, setProfiles] = useState<Profile[]>(loadProfiles)
   const [showReading, setShowReading] = useState(false)
+  const [showCareer, setShowCareer] = useState(false)
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(profiles))
@@ -64,6 +68,12 @@ export default function App() {
   }, [astrolabe, horoDate])
 
   const reading = useMemo(() => (astrolabe ? readChart(astrolabe) : null), [astrolabe])
+
+  const career = useMemo(() => {
+    if (!astrolabe) return null
+    const bazi = computeBazi(astrolabe)
+    return bazi ? buildCareerReading(bazi) : null
+  }, [astrolabe])
 
   const palaceName = (index: number) => astrolabe?.palaces[index]?.name ?? `${index}`
 
@@ -106,6 +116,7 @@ export default function App() {
             marks={marks}
             palaceName={palaceName}
             onOpenReading={() => setShowReading(true)}
+            onOpenCareer={() => setShowCareer(true)}
           />
           {astroError && <p className="astro-error">{astroError}</p>}
           <ChartGrid
@@ -173,6 +184,10 @@ export default function App() {
 
       {showReading && reading && (
         <ReadingPanel reading={reading} onClose={() => setShowReading(false)} />
+      )}
+
+      {showCareer && career && (
+        <CareerPanel reading={career} onClose={() => setShowCareer(false)} />
       )}
     </div>
   )
